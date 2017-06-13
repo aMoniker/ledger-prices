@@ -1,0 +1,15 @@
+<?php
+
+return [
+    'convert_to'   => '$',
+    'pricedb_file' => '/path/to/your/ledger/price.db',
+
+    'scrapers' => [
+        'ScraperXRP' => [
+            'XRP',
+        ],
+        'ScraperNYSE' => [
+            'F', 'FB', 'BRO'
+        ],
+    ],
+];

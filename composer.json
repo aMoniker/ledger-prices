@@ -1,0 +1,19 @@
+{
+    "name": "amoniker/ledger-prices",
+    "description": "Update price-db entries for ledger-cli",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "James Greenleaf",
+            "email": "james@greenle.af"
+        }
+    ],
+    "require": {
+        "guzzlehttp/guzzle": "~6.0",
+        "vlucas/phpdotenv": "^2.4",
+        "symfony/console": "^3.3"
+    },
+    "autoload": {
+        "psr-4": {"aMoniker\\LedgerPrices\\": "src/"}
+    }
+}

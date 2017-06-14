@@ -11,7 +11,8 @@
     "require": {
         "guzzlehttp/guzzle": "~6.0",
         "vlucas/phpdotenv": "^2.4",
-        "symfony/console": "^3.3"
+        "symfony/console": "^3.3",
+        "monolog/monolog": "^1.22"
     },
     "autoload": {
         "psr-4": {"aMoniker\\LedgerPrices\\": "src/"}

@@ -1,15 +1,27 @@
 <?php
 
 return [
-    'convert_to'   => '$',
-    'pricedb_file' => '/path/to/your/ledger/price.db',
+    // A mapping of ledger symbols => external currency symbols.
+    // Each external API might use different symbols to represent, say, USD.
+    // This provides a mapping of <internal_symbol> => [<external_symbol>, ...]
+    'conversion_symbols' => [
+        '$' => ['USD', '$'],
+        '£' => ['GBP', '£'],
+    ],
 
+    // The file that will be updated with price conversions.
+    'pricedb_file' => '/Users/moniker/ledger/prices.db',
+
+    // Individual price scrapers and their configurations.
     'scrapers' => [
-        'ScraperXRP' => [
-            'XRP',
+
+        'CryptoCompare' => [
+            'conversions' => [
+                'XRP' => 'USD',
+                'BTC' => 'USD',
+                'ETH' => 'GBP',
+            ],
         ],
-        'ScraperNYSE' => [
-            'F', 'FB', 'BRO'
-        ],
+
     ],
 ];

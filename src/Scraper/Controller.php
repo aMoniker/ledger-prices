@@ -6,7 +6,7 @@ use aMoniker\LedgerPrices\Config;
 
 class Controller {
     protected $config;
-    protected $scraper_namespace = 'aMoniker\\LedgerPrices\\Scraper\\';
+    protected $scraper_namespace = 'aMoniker\\LedgerPrices\\Scraper\\Scrapers\\';
 
     public function __construct()
     {
@@ -14,14 +14,33 @@ class Controller {
         $this->config = new Config();
     }
 
-    public function getConfiguredScrapers()
+    public function getRates()
     {
-        return $this->config->get('scrapers');
-    }
+        $rates = [];
+        $scrapers = $this->config->get('scrapers');
 
-    public function getScraper($classname)
-    {
-        return $this->instantiateScraper($classname);
+        foreach ($scrapers as $class => $config) {
+            $scraper = $this->instantiateScraper($class);
+            if ($scraper === null) {
+                // $output->writeln("ERROR: Scraper not found: $scraper_class");
+                // TODO - log this
+                continue;
+            }
+
+            $conversions = $config['conversions'] ?? [];
+
+            foreach ($conversions as $from => $to) {
+                $rate = $scraper->process($from, $to);
+                if (empty($rate)) {
+                    // $output->writeLn("Price for $symbol could not be found.");
+                    // TODO - log this
+                    continue;
+                }
+                $rates[$from] = $rate;
+            }
+        }
+
+        return $rates;
     }
 
     protected function instantiateScraper($classname)

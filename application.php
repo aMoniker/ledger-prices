@@ -3,8 +3,12 @@
 namespace aMoniker\LedgerPrices;
 
 use aMoniker\LedgerPrices\Command\UpdatePricesCommand;
+use aMoniker\LedgerPrices\Command\GetPricesCommand;
 use Symfony\Component\Console\Application;
 
 $app = new Application();
-$app->add(new UpdatePricesCommand());
+$app->addCommands([
+    new UpdatePricesCommand(),
+    new GetPricesCommand(),
+]);
 $app->run();

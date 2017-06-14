@@ -15,11 +15,18 @@ abstract class Scraper {
     protected $name = 'Base';
 
     /**
-     * The (optional) symbol to be scraped.
+     * The external symbol to be converted from.
      *
      * @var string
      */
-    protected $symbol;
+    protected $from_symbol;
+
+    /**
+     * The external symbol to be converted to.
+     *
+     * @var string
+     */
+    protected $to_symbol;
 
     /**
      * The URI of the request.
@@ -70,8 +77,11 @@ abstract class Scraper {
      * @param  string $symbol Optional symbol that the scraper should use.
      * @return float
      */
-    public function process($symbol = '')
+    public function process($from_symbol, $to_symbol)
     {
+        $this->from_symbol = $from_symbol;
+        $this->to_symbol = $to_symbol;
+
         try {
             $this->fetch();
             return $this->scrape();
@@ -79,16 +89,6 @@ abstract class Scraper {
             // TODO log this
             return null;
         }
-    }
-
-    /**
-     * Return the URI used by Scraper::fetch()
-     *
-     * @return string
-     */
-    public function uri()
-    {
-        return $this->base_uri;
     }
 
     /**
@@ -102,9 +102,19 @@ abstract class Scraper {
     }
 
     /**
+     * Return the URI used by Scraper::fetch()
+     *
+     * @return string
+     */
+    protected function uri()
+    {
+        return $this->base_uri;
+    }
+
+    /**
      * Fetch the Scraper::uri() and save the Guzzle response
      */
-    public function fetch() {
+    protected function fetch() {
         $this->response = $this->guzzle->request($this->http_method, $this->uri());
     }
 
@@ -116,5 +126,21 @@ abstract class Scraper {
      *
      * @return float The rate of exchange for the given commodity
      */
-    public abstract function scrape();
+    protected abstract function scrape();
+
+    /**
+     * Format the returned rate as a plain object
+     * with the from/to symbols and the rate.
+     *
+     * @param  float $rate
+     * @return object
+     */
+    protected function formatRate($rate)
+    {
+        return (object) [
+            'from' => $this->from_symbol,
+            'to'   => $this->to_symbol,
+            'rate' => $rate,
+        ];
+    }
 }

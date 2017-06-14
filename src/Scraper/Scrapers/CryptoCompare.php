@@ -19,7 +19,6 @@ class CryptoCompare extends Scraper {
 
     public function uri()
     {
-        // ?fsym=ETH&tsyms=BTC,USD,EUR
         return $this->base_uri . '?' . http_build_query([
             'fsym' => $this->from_symbol,
             'tsyms' => $this->to_symbol,

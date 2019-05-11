@@ -9,7 +9,7 @@
         }
     ],
     "require": {
-        "guzzlehttp/guzzle": "~6.0",
+        "guzzlehttp/guzzle": "~6.3",
         "vlucas/phpdotenv": "^2.4",
         "symfony/console": "^3.3",
         "monolog/monolog": "^1.22"

@@ -7,35 +7,33 @@ use aMoniker\LedgerPrices\Exception\ScraperException;
 use GuzzleHttp\Exception\RequestException;
 
 /**
- * Uses the google API to obtain stock quotes
- *
- * Currently only handles USD
+ * Uses the IEX API to obtain stock quotes
  */
-class GoogleStocks extends Scraper {
+class IEX extends Scraper {
 
-    protected $name = 'Google Stocks';
-    protected $base_uri = 'https://www.google.com/finance/info?q=';
+    protected $name = 'IEX';
+		protected $base_uri = "https://api.iextrading.com/1.0/stock/";
+		// https://api.iextrading.com/1.0/stock/F/delayed-quote
 
     public function uri()
     {
-        return "{$this->base_uri}{$this->from_symbol}";
+        return "{$this->base_uri}{$this->from_symbol}/delayed-quote";
     }
 
     public function scrape() {
         try {
-            $body = substr($this->response->getBody(), 3);
-
+						$body = $this->response->getBody();
             $json = json_decode($body, true);
             if (empty($json)) {
                 throw new ScraperException('No valid JSON in response');
             }
-            if (!isset($json[0])) {
-                throw new ScraperException("No valid {$this->to_symbol} rate in JSON response");
-            }
-            $r = $json[0];
-            $rate = (float) ($r['l_cur'] ?? 0);
+						if (!isset($json['delayedPrice'])) {
+                throw new ScraperException("Missing rate for {$this->from_symbol} in JSON response");
+						}
+
+						$rate = (float) $json['delayedPrice'];
             if ($rate === null || $rate <= 0) {
-                throw new ScraperException("Missing rate for {$this->to_symbol} in JSON response");
+                throw new ScraperException("Invalid {$this->from_symbol} rate in JSON response");
             }
         } catch (RequestException $e) {
             throw new ScraperException($e->getMessage(), $e->getCode(), $e);
